@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Portfolio — VintageHub</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    /* Additional portfolio styles will go in CSS part */
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-logo">VintageHub</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="portfolio.html" class="active">Portfolio</a></li>
+      <li><a href="booking.html">Book Us</a></li>
+      <li><a href="reviews.html">Reviews</a></li>
+      <li><a href="announcements.html">Announcements</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-header">
+    <p class="section-label">Our Work</p>
+    <h1>Portfolio</h1>
+  </div>
+
+  <!-- Category Filter Section -->
+  <div class="portfolio-categories">
+    <button class="category-btn active" data-category="all">All</button>
+    <button class="category-btn" data-category="wedding">Weddings</button>
+    <button class="category-btn" data-category="portrait">Portraits</button>
+    <button class="category-btn" data-category="outdoor">Outdoor Events</button>
+    <button class="category-btn" data-category="indoor">Indoor Events</button>
+  </div>
+
+  <!-- Portfolio Grid -->
+  <div class="portfolio-grid" id="portfolioGrid">
+    
+    <!-- Wedding Category (Commented out - uncomment when you have images) 
+    <div class="portfolio-item" data-category="wedding">
+      <div class="portfolio-images">
+        <div class="portfolio-img" style="background-image: url('images/portfolio/wed1.jpg')" data-img="images/portfolio/wed1.jpg"></div>
+        <div class="portfolio-img" style="background-image: url('images/portfolio/wed2.jpg')" data-img="images/portfolio/wed2.jpg"></div>
+      </div>
+      <div class="portfolio-meta">
+        <h3>Perera Wedding</h3>
+        <span class="portfolio-tag">Wedding</span>
+      </div>
+    </div>
+    -->
+
+    <!-- Portrait Category -->
+    <div class="portfolio-item" data-category="portrait">
+      <div class="portfolio-images">
+        <div class="portfolio-img" style="background-image: url('images/portfolio/port1.jpg')" data-img="images/portfolio/port1.jpg"></div>
+        <div class="portfolio-img" style="background-image: url('images/portfolio/port2.jpg')" data-img="images/portfolio/port2.jpg"></div>
+      </div>
+      <div class="portfolio-meta">
+        <h3>A creative design by Anjalee</h3>
+        <span class="portfolio-tag">Portrait</span>
+      </div>
+    </div>
+
+    <div class="portfolio-item" data-category="portrait">
+      <div class="portfolio-images">
+        <div class="portfolio-img" style="background-image: url('images/portfolio/port3.jpg')" data-img="images/portfolio/port3.jpg"></div>
+        <div class="portfolio-img" style="background-image: url('images/portfolio/port4.jpg')" data-img="images/portfolio/port4.jpg"></div>
+      </div>
+      <div class="portfolio-meta">
+        <h3>Crafted for a birthday celebration</h3>
+        <span class="portfolio-tag">Portrait</span>
+      </div>
+    </div>
+
+    <div class="portfolio-item" data-category="portrait">
+      <div class="portfolio-images">
+        <div class="portfolio-img" style="background-image: url('images/portfolio/port5.jpg')" data-img="images/portfolio/port5.jpg"></div>
+        <div class="portfolio-img" style="background-image: url('images/portfolio/port6.jpg')" data-img="images/portfolio/port6.jpg"></div>
+      </div>
+      <div class="portfolio-meta">
+        <h3>Crafted for portfolio showcase</h3>
+        <span class="portfolio-tag">Portrait</span>
+      </div>
+    </div>
+
+    <div class="portfolio-item" data-category="portrait">
+      <div class="portfolio-images">
+        <div class="portfolio-img" style="background-image: url('images/portfolio/port7.jpg')" data-img="images/portfolio/port7.jpg"></div>
+        <div class="portfolio-img" style="background-image: url('images/portfolio/port8.jpg')" data-img="images/portfolio/port8.jpg"></div>
+      </div>
+      <div class="portfolio-meta">
+        <h3>Academic design by Ushi</h3>
+        <span class="portfolio-tag">Portrait</span>
+      </div>
+    </div>
+
+    <div class="portfolio-item" data-category="portrait">
+      <div class="portfolio-images">
+        <div class="portfolio-img" style="background-image: url('images/portfolio/port9.jpg')" data-img="images/portfolio/port9.jpg"></div>
+        <div class="portfolio-img" style="background-image: url('images/portfolio/port10.jpg')" data-img="images/portfolio/port10.jpg"></div>
+      </div>
+      <div class="portfolio-meta">
+        <h3>Shot for a birthday celebration</h3>
+        <span class="portfolio-tag">Portrait</span>
+      </div>
+    </div>
+
+    <div class="portfolio-item" data-category="portrait">
+      <div class="portfolio-images">
+        <div class="portfolio-img" style="background-image: url('images/portfolio/port11.jpg')" data-img="images/portfolio/port11.jpg"></div>
+        <div class="portfolio-img" style="background-image: url('images/portfolio/port12.jpg')" data-img="images/portfolio/port12.jpg"></div>
+      </div>
+      <div class="portfolio-meta">
+        <h3>Done for a portfolio</h3>
+        <span class="portfolio-tag">Portrait</span>
+      </div>
+    </div>
+
+    <!-- Outdoor Events Category -->
+    <div class="portfolio-item" data-category="outdoor">
+      <div class="portfolio-images">
+        <div class="portfolio-img" style="background-image: url('images/portfolio/outdoor1.jpg')" data-img="images/portfolio/outdoor1.jpg"></div>
+        <div class="portfolio-img" style="background-image: url('images/portfolio/outdoor2.jpg')" data-img="images/portfolio/outdoor2.jpg"></div>
+      </div>
+      <div class="portfolio-meta">
+        <h3>Interflash ticket Launch</h3>
+        <span class="portfolio-tag">Outdoor</span>
+      </div>
+    </div>
+
+    <div class="portfolio-item" data-category="outdoor">
+      <div class="portfolio-images">
+        <div class="portfolio-img" style="background-image: url('images/portfolio/outdoor3.jpg')" data-img="images/portfolio/outdoor3.jpg"></div>
+        <div class="portfolio-img" style="background-image: url('images/portfolio/outdoor4.jpg')" data-img="images/portfolio/outdoor4.jpg"></div>
+      </div>
+      <div class="portfolio-meta">
+        <h3>Kyotto all night 2025</h3>
+        <span class="portfolio-tag">Outdoor</span>
+      </div>
+    </div>
+
+    <div class="portfolio-item" data-category="outdoor">
+      <div class="portfolio-images">
+        <div class="portfolio-img" style="background-image: url('images/portfolio/outdoor5.jpg')" data-img="images/portfolio/outdoor5.jpg"></div>
+        <div class="portfolio-img" style="background-image: url('images/portfolio/outdoor6.jpg')" data-img="images/portfolio/outdoor6.jpg"></div>
+      </div>
+      <div class="portfolio-meta">
+        <h3>Beheth Concert 2025</h3>
+        <span class="portfolio-tag">Outdoor</span>
+      </div>
+    </div>
+
+    <div class="portfolio-item" data-category="outdoor">
+      <div class="portfolio-images">
+        <div class="portfolio-img" style="background-image: url('images/portfolio/outdoor7.png')" data-img="images/portfolio/outdoor7.png"></div>
+        <div class="portfolio-img" style="background-image: url('images/portfolio/outdoor8.png')" data-img="images/portfolio/outdoor8.png"></div>
+      </div>
+      <div class="portfolio-meta">
+        <h3>DimuthK All night 2026</h3>
+        <span class="portfolio-tag">Outdoor</span>
+      </div>
+    </div>
+
+    <div class="portfolio-item" data-category="outdoor">
+      <div class="portfolio-images">
+        <div class="portfolio-img" style="background-image: url('images/portfolio/outdoor9.jpg')" data-img="images/portfolio/outdoor9.jpg"></div>
+        <div class="portfolio-img" style="background-image: url('images/portfolio/outdoor10.jpg')" data-img="images/portfolio/outdoor10.jpg"></div>
+      </div>
+      <div class="portfolio-meta">
+        <h3>Fashion show - Organized by British School Colombo</h3>
+        <span class="portfolio-tag">Outdoor</span>
+      </div>
+    </div>
+
+    <div class="portfolio-item" data-category="outdoor">
+      <div class="portfolio-images">
+        <div class="portfolio-img" style="background-image: url('images/portfolio/outdoor11.jpg')" data-img="images/portfolio/outdoor11.jpg"></div>
+        <div class="portfolio-img" style="background-image: url('images/portfolio/outdoor12.jpg')" data-img="images/portfolio/outdoor12.jpg"></div>
+      </div>
+      <div class="portfolio-meta">
+        <h3>Desi Night 2025</h3>
+        <span class="portfolio-tag">Outdoor</span>
+      </div>
+    </div>
+
+    <div class="portfolio-item" data-category="outdoor">
+      <div class="portfolio-images">
+        <div class="portfolio-img" style="background-image: url('images/portfolio/outdoor13.jpg')" data-img="images/portfolio/outdoor13.jpg"></div>
+        <div class="portfolio-img" style="background-image: url('images/portfolio/outdoor14.jpg')" data-img="images/portfolio/outdoor14.jpg"></div>
+      </div>
+      <div class="portfolio-meta">
+        <h3>avegaya 2025</h3>
+        <span class="portfolio-tag">Outdoor</span>
+      </div>
+    </div>
+
+    <!-- Indoor Events Category -->
+    <div class="portfolio-item" data-category="indoor">
+      <div class="portfolio-images">
+        <div class="portfolio-img" style="background-image: url('images/portfolio/indoor1.jpg')" data-img="images/portfolio/indoor1.jpg"></div>
+        <div class="portfolio-img" style="background-image: url('images/portfolio/indoor2.jpg')" data-img="images/portfolio/indoor2.jpg"></div>
+      </div>
+      <div class="portfolio-meta">
+        <h3>Fashion designs by NIBM Foundation students showcased at a live event</h3>
+        <span class="portfolio-tag">Indoor</span>
+      </div>
+    </div>
+
+    <div class="portfolio-item" data-category="indoor">
+      <div class="portfolio-images">
+        <div class="portfolio-img" style="background-image: url('images/portfolio/indoor3.jpg')" data-img="images/portfolio/indoor3.jpg"></div>
+        <div class="portfolio-img" style="background-image: url('images/portfolio/indoor4.jpg')" data-img="images/portfolio/indoor4.jpg"></div>
+      </div>
+      <div class="portfolio-meta">
+        <h3>Centric Software's Networking dinner</h3>
+        <span class="portfolio-tag">Indoor</span>
+      </div>
+    </div>
+
+    <div class="portfolio-item" data-category="indoor">
+      <div class="portfolio-images">
+        <div class="portfolio-img" style="background-image: url('images/portfolio/indoor5.jpg')" data-img="images/portfolio/indoor5.jpg"></div>
+        <div class="portfolio-img" style="background-image: url('images/portfolio/indoor6.jpg')" data-img="images/portfolio/indoor6.jpg"></div>
+      </div>
+      <div class="portfolio-meta">
+        <h3>Dolce 2025</h3>
+        <span class="portfolio-tag">Indoor</span>
+      </div>
+    </div>
+
+    <div class="portfolio-item" data-category="indoor">
+      <div class="portfolio-images">
+        <div class="portfolio-img" style="background-image: url('images/portfolio/indoor7.jpg')" data-img="images/portfolio/indoor7.jpg"></div>
+        <div class="portfolio-img" style="background-image: url('images/portfolio/indoor8.jpg')" data-img="images/portfolio/indoor8.jpg"></div>
+      </div>
+      <div class="portfolio-meta">
+        <h3>Bollywood night</h3>
+        <span class="portfolio-tag">Indoor</span>
+      </div>
+    </div>
+    <div class="portfolio-item" data-category="indoor">
+      <div class="portfolio-images">
+        <div class="portfolio-img" style="background-image: url('images/portfolio/indoor9.jpg')" data-img="images/portfolio/indoor9.jpg"></div>
+        <div class="portfolio-img" style="background-image: url('images/portfolio/indoor10.jpg')" data-img="images/portfolio/indoor10.jpg"></div>
+      </div>
+      <div class="portfolio-meta">
+        <h3>M events</h3>
+        <span class="portfolio-tag">Indoor</span>
+      </div>
+    </div>
+    <div class="portfolio-item" data-category="indoor">
+      <div class="portfolio-images">
+        <div class="portfolio-img" style="background-image: url('images/portfolio/indoor11.jpg')" data-img="images/portfolio/indoor11.jpg"></div>
+        <div class="portfolio-img" style="background-image: url('images/portfolio/indoor12.jpg')" data-img="images/portfolio/indoor12.jpg"></div>
+      </div>
+      <div class="portfolio-meta">
+        <h3>Hemas Wattala</h3>
+        <span class="portfolio-tag">Indoor</span>
+      </div>
+    </div>
+
+  </div> <!-- Closing portfolio-grid -->
+
+  <!-- Video Samples Section -->
+  <div class="video-samples-section">
+    <div class="video-samples-header">
+      <h2>🎬 Video Samples</h2>
+      <p>Watch our latest work highlights</p>
+    </div>
+    <div class="video-buttons">
+      <a href="https://www.facebook.com/yourpage/reels" target="_blank" class="video-btn facebook-reel">
+        <span>📱</span> Watch Facebook Reels
+      </a>
+      <a href="https://www.instagram.com/yourusername/reels" target="_blank" class="video-btn instagram-reel">
+        <span>🎥</span> Watch Instagram Reels
+      </a>
+      <a href="https://www.tiktok.com/@yourusername" target="_blank" class="video-btn tiktok-reel">
+        <span>⏰</span> Watch TikTok Reels
+      </a>
+    </div>
+    <p class="video-note">✨ Click any button to view our video samples on social media</p>
+  </div>
+
+  <!-- Lightbox Modal for Full Image View -->
+  <div id="lightboxModal" class="lightbox-modal">
+    <span class="close-lightbox">&times;</span>
+    <img class="lightbox-image" id="lightboxImage" alt="Full size image">
+    <div class="lightbox-caption" id="lightboxCaption"></div>
+  </div>
+
+  <footer>
+    <p>© 2025 VintageHub Photography. All rights reserved.</p>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script>
+    // Portfolio specific JavaScript
+    document.addEventListener('DOMContentLoaded', function() {
+      
+      // Category Filter Functionality
+      const categoryBtns = document.querySelectorAll('.category-btn');
+      const portfolioItems = document.querySelectorAll('.portfolio-item');
+      
+      if (categoryBtns.length > 0) {
+        categoryBtns.forEach(btn => {
+          btn.addEventListener('click', function() {
+            categoryBtns.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            
+            const category = this.getAttribute('data-category');
+            
+            portfolioItems.forEach(item => {
+              if (category === 'all' || item.getAttribute('data-category') === category) {
+                item.style.display = 'block';
+                item.classList.add('show');
+              } else {
+                item.style.display = 'none';
+                item.classList.remove('show');
+              }
+            });
+          });
+        });
+      }
+      
+      // Lightbox Functionality
+      const lightbox = document.getElementById('lightboxModal');
+      const lightboxImage = document.getElementById('lightboxImage');
+      const lightboxCaption = document.getElementById('lightboxCaption');
+      const closeLightbox = document.querySelector('.close-lightbox');
+      
+      const portfolioImgs = document.querySelectorAll('.portfolio-img');
+      
+      portfolioImgs.forEach(img => {
+        img.addEventListener('click', function(e) {
+          e.stopPropagation();
+          let imgUrl = this.getAttribute('data-img');
+          if (!imgUrl) {
+            const bgImage = this.style.backgroundImage;
+            imgUrl = bgImage.slice(5, -2).replace(/"/g, '');
+          }
+          
+          const portfolioItem = this.closest('.portfolio-item');
+          const title = portfolioItem.querySelector('h3')?.innerText || 'Portfolio Image';
+          const tag = portfolioItem.querySelector('.portfolio-tag')?.innerText || '';
+          
+          lightboxImage.src = imgUrl;
+          lightboxCaption.innerHTML = `${title} — ${tag}`;
+          lightbox.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        });
+      });
+      
+      function closeLightboxModal() {
+        lightbox.classList.remove('active');
+        document.body.style.overflow = '';
+        lightboxImage.src = '';
+      }
+      
+      if (closeLightbox) {
+        closeLightbox.addEventListener('click', closeLightboxModal);
+      }
+      
+      if (lightbox) {
+        lightbox.addEventListener('click', function(e) {
+          if (e.target === lightbox) {
+            closeLightboxModal();
+          }
+        });
+      }
+      
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && lightbox && lightbox.classList.contains('active')) {
+          closeLightboxModal();
+        }
+      });
+      
+      // Update social media links
+      const tiktokBtn = document.querySelector('.tiktok-reel');
+      if (tiktokBtn) {
+        tiktokBtn.href = 'https://www.tiktok.com/@vintagehub.graphy?_r=1&_t=ZS-95cFueJpSdR';
+      }
+      
+      const fbBtn = document.querySelector('.facebook-reel');
+      if (fbBtn) {
+        fbBtn.href = 'https://www.facebook.com/share/1DVqWLitwF/?mibextid=wwXIfr';
+      }
+      
+      const instaBtn = document.querySelector('.instagram-reel');
+      if (instaBtn) {
+        instaBtn.href = 'https://www.instagram.com/vintage.hub.official?igsh=ZTE3bm5rMzIzaTRy&utm_source=qr';
+      }
+    });
+  </script>
+</body>
+</html>

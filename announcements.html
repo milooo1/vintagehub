@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Announcements — VintageHub</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    /* Additional styles for announcements page */
+    
+    .announcements-page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+    
+    .page-announcement-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+    
+    .page-announcement-header h1 {
+      font-size: 48px;
+      font-weight: 800;
+      margin: 16px 0;
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: #ffffff;
+    }
+    
+    .page-announcement-header p {
+      color: #ffffff;
+      font-size: 18px;
+    }
+    
+    /* Announcements Grid */
+    .announcements-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+      gap: 32px;
+      margin-bottom: 60px;
+    }
+    
+    /* Announcement Card */
+    .announcement-card {
+      background: white;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .announcement-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+    }
+    
+    /* Announcement Image */
+    .announcement-image {
+      width: 100%;
+      height: 240px;
+      overflow: hidden;
+      background: #f0f0f0;
+      position: relative;
+    }
+    
+    .announcement-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    
+    .announcement-card:hover .announcement-image img {
+      transform: scale(1.05);
+    }
+    
+    /* No Image Placeholder */
+    .no-image {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      font-size: 48px;
+    }
+    
+    /* Announcement Content */
+    .announcement-content {
+      padding: 24px;
+    }
+    
+    .announcement-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      background: #ff6b6b;
+      color: white;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 20px;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .announcement-badge.event {
+      background: #4ecdc4;
+    }
+    
+    .announcement-badge.offer {
+      background: #ff6b6b;
+    }
+    
+    .announcement-badge.update {
+      background: #45b7d1;
+    }
+    
+    .announcement-title {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: #1a1a2e;
+      line-height: 1.3;
+    }
+    
+    .announcement-date {
+      font-size: 13px;
+      color: #999;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .announcement-date::before {
+      content: "📅";
+      font-size: 12px;
+    }
+    
+    .announcement-text {
+      color: #555;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    
+    /* Links inside announcement */
+    .announcement-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+      padding-top: 12px;
+      border-top: 1px solid #eee;
+    }
+    
+    .announcement-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #4ecdc4;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+    
+    .announcement-link:hover {
+      color: #ff6b6b;
+    }
+    
+    .announcement-link::before {
+      content: "🔗";
+      font-size: 12px;
+    }
+    
+    /* WhatsApp More Info Button */
+    .whatsapp-more-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #25D366;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      margin-top: 8px;
+    }
+    
+    .whatsapp-more-btn:hover {
+      background: #128C7E;
+      transform: scale(1.02);
+    }
+    
+    .whatsapp-more-btn::before {
+      content: "💬";
+      font-size: 16px;
+    }
+    
+    /* WhatsApp Floating Button */
+    .whatsapp-float {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: #25D366;
+      color: white;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      font-size: 30px;
+      box-shadow: 0 5px 20px rgba(37, 211, 102, 0.4);
+      transition: all 0.3s ease;
+      z-index: 100;
+    }
+    
+    .whatsapp-float:hover {
+      transform: scale(1.1);
+      background: #128C7E;
+    }
+    
+    /* No Announcements Message */
+    .no-announcements {
+      text-align: center;
+      padding: 80px 20px;
+      background: white;
+      border-radius: 24px;
+    }
+    
+    .no-announcements h3 {
+      font-size: 24px;
+      color: #1a1a2e;
+      margin-bottom: 12px;
+    }
+    
+    .no-announcements p {
+      color: #666;
+      margin-bottom: 24px;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .announcements-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+      
+      .page-announcement-header h1 {
+        font-size: 36px;
+      }
+      
+      .announcement-title {
+        font-size: 20px;
+      }
+      
+      .whatsapp-float {
+        width: 50px;
+        height: 50px;
+        font-size: 24px;
+        bottom: 20px;
+        right: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation (same as your other pages) -->
+  <nav>
+    <div class="nav-logo">VintageHub</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="portfolio.html">Portfolio</a></li>
+      <li><a href="booking.html">Book Us</a></li>
+      <li><a href="reviews.html">Reviews</a></li>
+      <li><a href="announcements.html" class="active">Announcements</a></li>
+    </ul>
+  </nav>
+
+  <!-- Announcements Page Content -->
+  <div class="announcements-page">
+    <div class="page-announcement-header">
+      <p class="section-label">Stay Updated</p>
+      <h1>Announcements & News</h1>
+      <p>Latest updates, special offers, and important information</p>
+    </div>
+
+    <div class="announcements-grid" id="announcementsGrid">
+      <!-- Announcements will be loaded here -->
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 VintageHub Photography. All rights reserved.</p>
+  </footer>
+
+  <!-- WhatsApp Floating Button -->
+  <a href="https://wa.me/94772780118?text=Hi!%20I%20want%20to%20know%20more%20about%20your%20announcements" 
+     class="whatsapp-float" target="_blank">
+    💬
+  </a>
+
+  <script>
+    // ===== ANNOUNCEMENTS DATA =====
+    // Add your announcements here. For each announcement you can include:
+    // - title: Announcement title
+    // - date: Date of announcement
+    // - text: Main content/text
+    // - image: (optional) image URL - leave empty or null for text-only
+    // - badge: "event", "offer", or "update"
+    // - links: (optional) array of {text, url}
+    
+    const announcements = [
+      {
+        title: "Interflash 2026",
+        date: "May 08, 2026",
+        text: "We are pleased to announce our role as the official photography team for Interflash 2026.",
+        image: "images/interflash.jpeg",  // Optional: put your image path or leave null
+        badge: "event",
+        links: [
+    
+            { text: "Buy tickets", url: "https://www.interflash.lk/" }
+        ]
+      },
+      {
+        title: "Avegaya 2026",
+        date: "April 25, 2026",
+        text: "We are pleased to announce our role as the official photography team for Avegaya.",
+        image: "images/avegaya.jpeg",  
+        badge: "event",
+        links: [
+          { text: "Buy tickets", url: "https://tickets.avegaya.com/" }
+        ]
+      },
+      /*{
+        title: "🌟 New Studio Location Opening",
+        date: "April 5, 2025",
+        text: "We're excited to announce our new studio opening in Colombo! State-of-the-art equipment, professional lighting, and creative backdrops.",
+        image: "images/studio.jpg",
+        badge: "update",
+        links: [
+          { text: "View Location", url: "#" },
+          { text: "Book a Session", url: "#" }
+        ]
+      },
+      {
+        title: "📷 Portrait Marathon Event",
+        date: "March 28, 2025",
+        text: "48-hour portrait marathon! Get professional portraits at special rates. Perfect for personal branding, family portraits, and headshots.",
+        image: null,
+        badge: "event",
+        links: []
+      },
+      {
+        title: "🎁 Referral Program Launch",
+        date: "March 20, 2025",
+        text: "Refer a friend and both get 15% off your next photoshoot! No limits, share the love of photography.",
+        image: "images/referral.jpg",
+        badge: "offer",
+        links: [
+          { text: "Learn More", url: "#" }
+        ]
+      }*/
+    ];
+
+    // Function to render announcements
+    function renderAnnouncements() {
+      const grid = document.getElementById('announcementsGrid');
+      
+      if (!announcements || announcements.length === 0) {
+        grid.innerHTML = `
+          <div class="no-announcements">
+            <h3>📢 No Announcements Yet</h3>
+            <p>Check back soon for updates, offers, and news!</p>
+            <a href="https://wa.me/94772780118?text=Hi!%20I%20want%20to%20know%20more%20about%20updates" 
+               class="whatsapp-more-btn" target="_blank">
+              Get Updates on WhatsApp
+            </a>
+          </div>
+        `;
+        return;
+      }
+      
+      grid.innerHTML = announcements.map(announcement => `
+        <div class="announcement-card">
+          <div class="announcement-image">
+            ${announcement.image ? 
+              `<img src="${announcement.image}" alt="${announcement.title}">` : 
+              `<div class="no-image">
+                <span>📢</span>
+              </div>`
+            }
+          </div>
+          <div class="announcement-content">
+            <span class="announcement-badge ${announcement.badge}">
+              ${announcement.badge === 'event' ? '🎉 EVENT' : announcement.badge === 'event' ? '🔥 OFFER' : '📢 UPDATE'}
+            </span>
+            <h3 class="announcement-title">${announcement.title}</h3>
+            <div class="announcement-date">${announcement.date}</div>
+            <p class="announcement-text">${announcement.text}</p>
+            
+            ${announcement.links && announcement.links.length > 0 ? `
+              <div class="announcement-links">
+                ${announcement.links.map(link => `
+                  <a href="${link.url}" class="announcement-link" target="_blank">${link.text}</a>
+                `).join('')}
+              </div>
+            ` : ''}
+            
+            <a href="https://wa.me/94772780118?text=Hi!%20I%20want%20more%20info%20about:%20${encodeURIComponent(announcement.title)}" 
+               class="whatsapp-more-btn" target="_blank">
+              More Info on WhatsApp
+            </a>
+          </div>
+        </div>
+      `).join('');
+    }
+    
+    // Load announcements when page loads
+    document.addEventListener('DOMContentLoaded', renderAnnouncements);
+  </script>
+</body>
+</html>

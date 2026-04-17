@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Book Us — VintageHub</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <nav>
+    <div class="nav-logo">VintageHub</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="portfolio.html">Portfolio</a></li>
+      <li><a href="booking.html" class="active">Book Us</a></li>
+      <li><a href="reviews.html">Reviews</a></li>
+      <li><a href="announcements.html">Announcements</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-header">
+    <p class="section-label">Get in touch</p>
+    <h1>Book Us</h1>
+  </div>
+
+  <div class="booking-wrap">
+
+    <a href="https://wa.me/94772780118" target="_blank" class="whatsapp-btn">
+      Message Us on WhatsApp
+    </a>
+
+    <div class="divider">
+      <div class="divider-line"></div>
+      <span>or fill in the form below</span>
+      <div class="divider-line"></div>
+    </div>
+
+    <div id="booking-form-wrap">
+      <form id="booking-form">
+
+        <p class="form-section-label">Client Details</p>
+
+        <div class="form-group">
+          <input type="text" id="name" placeholder="Full Name" required />
+        </div>
+        <div class="form-group">
+          <input type="tel" id="phone" placeholder="Phone Number" required />
+        </div>
+        <div class="form-group">
+          <input type="email" id="email" placeholder="Email Address" required />
+        </div>
+        <div class="form-group">
+          <input type="text" id="address" placeholder="Home Address" required />
+        </div>
+
+        <p class="form-section-label">Event Details</p>
+
+        <div class="form-group">
+          <input type="text" id="event-name" placeholder="Event Name" required />
+        </div>
+        <div class="form-group">
+          <input type="text" id="venue" placeholder="Venue" required />
+        </div>
+        <div class="form-group">
+          <input type="date" id="event-date" required />
+        </div>
+        <div class="form-group">
+          <input type="text" id="duration" placeholder="Duration (e.g. 4 hours)" required />
+        </div>
+
+        <p class="form-section-label">Requirements</p>
+
+        <button type="button" id="photo-btn" class="service-btn">Photography</button>
+        <div id="photo-counter" class="counter-row hidden">
+          <span>Number of photographers</span>
+          <div class="counter-controls">
+            <button type="button" id="photo-minus" class="counter-btn">−</button>
+            <span id="photo-val" class="counter-val">1</span>
+            <button type="button" id="photo-plus" class="counter-btn">+</button>
+          </div>
+        </div>
+
+        <button type="button" id="video-btn" class="service-btn">Videography</button>
+        <div id="video-counter" class="counter-row hidden">
+          <span>Number of videographers</span>
+          <div class="counter-controls">
+            <button type="button" id="video-minus" class="counter-btn">−</button>
+            <span id="video-val" class="counter-val">1</span>
+            <button type="button" id="video-plus" class="counter-btn">+</button>
+          </div>
+        </div>
+
+        <button type="submit" class="submit-btn">Submit Booking Request</button>
+
+      </form>
+
+      <div id="success-screen" class="success-screen hidden">
+        <div class="check">✓</div>
+        <h2>Booking Request Sent!</h2>
+        <p>Thank you! We have received your request and will send a quotation to your email within 24 hours.</p>
+        <a href="index.html" class="btn-outline">Back to Home</a>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <p>© 2025 VintageHub Photography. All rights reserved.</p>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

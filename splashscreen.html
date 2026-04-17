@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Splash Screen | 5s Video Experience</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* ----- FULLSCREEN SPLASH OVERLAY ----- */
+    .splash-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #000000;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* fade-out effect before redirect */
+    .splash-container.fade-out {
+      opacity: 0;
+    }
+
+    /* video wrapper - maintains proper aspect ratio */
+    .video-wrapper {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #000;
+      position: relative;
+    }
+
+    /* video element: responsive, shows full reel without cropping */
+    .splash-video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;  /* keeps entire video visible (letterbox if needed) */
+      max-width: 100%;
+      max-height: 100vh;
+      display: block;
+    }
+
+    /* optional gradient overlay for aesthetics (does not interfere) */
+    .video-wrapper::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 25%;
+      background: linear-gradient(to top, rgba(0,0,0,0.3), transparent);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* elegant countdown timer (bottom right) */
+    .timer-badge {
+      position: absolute;
+      bottom: 22px;
+      right: 24px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.85rem;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(8px);
+      color: white;
+      padding: 6px 16px;
+      border-radius: 60px;
+      letter-spacing: 0.5px;
+      font-weight: 500;
+      z-index: 20;
+      pointer-events: none;
+      border: 0.5px solid rgba(255,255,255,0.25);
+      font-weight: 500;
+    }
+
+    /* skip button (bottom left) - allows user to bypass splash */
+    .skip-btn {
+      position: absolute;
+      bottom: 22px;
+      left: 24px;
+      background: rgba(20, 20, 30, 0.7);
+      backdrop-filter: blur(8px);
+      color: #f0f0f0;
+      border: none;
+      padding: 6px 18px;
+      border-radius: 60px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+      z-index: 20;
+      transition: 0.2s ease;
+      border: 0.5px solid rgba(255,255,255,0.3);
+      letter-spacing: 0.3px;
+    }
+
+    .skip-btn:hover {
+      background: rgba(255, 255, 255, 0.25);
+      color: white;
+      transform: scale(0.96);
+    }
+
+    /* small loading/text hint if video is slow (optional) */
+    .loading-hint {
+      position: absolute;
+      bottom: 30%;
+      left: 50%;
+      transform: translateX(-50%);
+      color: rgba(255,255,255,0.6);
+      font-size: 0.8rem;
+      background: rgba(0,0,0,0.5);
+      padding: 5px 12px;
+      border-radius: 30px;
+      font-family: system-ui;
+      pointer-events: none;
+      white-space: nowrap;
+      z-index: 15;
+    }
+
+    @media (max-width: 640px) {
+      .timer-badge, .skip-btn {
+        bottom: 14px;
+        font-size: 0.7rem;
+        padding: 4px 12px;
+      }
+      .loading-hint {
+        font-size: 0.7rem;
+        bottom: 25%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SPLASH SCREEN: plays video & counts 5 seconds then redirects to index.html -->
+  <div id="splashScreen" class="splash-container">
+    <div class="video-wrapper">
+      <!-- 
+        IMPORTANT: REPLACE THE VIDEO SOURCE with your own reel!
+        - Change 'your-reel-video.mp4' to the actual path/filename of your 5-second video.
+        - Supported formats: .mp4, .webm, .mov (ensure web-compatible).
+        - Example: src="videos/intro-reel.mp4" or "https://yourdomain.com/assets/splash.mp4"
+        - Video MUST have 'muted' attribute for autoplay policies in modern browsers.
+        - playsinline ensures mobile playback without fullscreen.
+      -->
+      <video id="splashVideo" class="splash-video" autoplay muted playsinline preload="auto" disablePictureInPicture>
+        <source src="123.mp4" type="video/mp4">
+        <!-- fallback text if video fails to load (rare) -->
+        Your browser doesn't support video playback. Redirecting shortly...
+      </video>
+      
+      <!-- countdown display (dynamic) -->
+      <div class="timer-badge" id="countdownDisplay">ENTERING IN 5s</div>
+      
+      <!-- skip button: immediately redirect without waiting -->
+      <button class="skip-btn" id="skipRedirectBtn">SKIP →</button>
+      
+      <!-- tiny hint (optional, shows if video takes time) -->
+      <div class="loading-hint" id="loadingHint">Almost there...</div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      // ========== CONFIGURATION ==========
+      // Duration of splash screen in milliseconds (5 seconds)
+      const SPLASH_DURATION_MS = 5000;   // 5000ms = 5 seconds
+      
+      // REDIRECT TARGET: after splash ends, go to index.html
+      const REDIRECT_URL = 'index.html';
+      
+      // ========== DOM ELEMENTS ==========
+      const splashContainer = document.getElementById('splashScreen');
+      const splashVideo = document.getElementById('splashVideo');
+      const countdownEl = document.getElementById('countdownDisplay');
+      const skipBtn = document.getElementById('skipRedirectBtn');
+      
+      // State variables
+      let isRedirecting = false;        // prevent multiple redirects
+      let countdownInterval = null;
+      let mainTimeout = null;
+      let timeLeft = 5;                 // seconds (for display)
+      
+      // ========== HELPER: UPDATE COUNTDOWN UI ==========
+      function updateCountdownUI() {
+        if (countdownEl) {
+          countdownEl.textContent = `ENTERING IN ${timeLeft}s`;
+        }
+      }
+      
+      // ========== PERFORM REDIRECT TO INDEX.HTML ==========
+      function redirectToIndex() {
+        // avoid double execution
+        if (isRedirecting) return;
+        isRedirecting = true;
+        
+        // clear any pending timers & intervals to avoid memory leaks
+        if (countdownInterval) {
+          clearInterval(countdownInterval);
+          countdownInterval = null;
+        }
+        if (mainTimeout) {
+          clearTimeout(mainTimeout);
+          mainTimeout = null;
+        }
+        
+        // pause video if still playing (cleanup)
+        if (splashVideo) {
+          try {
+            splashVideo.pause();
+          } catch(e) { /* ignore */ }
+        }
+        
+        // add fade-out effect for smoother transition
+        if (splashContainer) {
+          splashContainer.classList.add('fade-out');
+        }
+        
+        // small delay to let fade-out complete before redirect (better UX)
+        setTimeout(() => {
+          // Perform the actual redirect to index.html
+          window.location.href = REDIRECT_URL;
+        }, 400);  // 400ms matches fade transition nicely
+      }
+      
+      // ========== START COUNTDOWN (visual timer) ==========
+      function startCountdownTimer() {
+        timeLeft = 5;
+        updateCountdownUI();
+        
+        countdownInterval = setInterval(() => {
+          if (isRedirecting) {
+            // if we're already redirecting, clear interval
+            if (countdownInterval) clearInterval(countdownInterval);
+            return;
+          }
+          
+          if (timeLeft > 1) {
+            timeLeft--;
+            updateCountdownUI();
+          } else {
+            // timeLeft reaches 0 -> redirect now
+            timeLeft = 0;
+            updateCountdownUI();
+            // trigger redirect (only if not already triggered)
+            if (!isRedirecting) {
+              redirectToIndex();
+            }
+            // clear interval after redirect trigger
+            if (countdownInterval) {
+              clearInterval(countdownInterval);
+              countdownInterval = null;
+            }
+          }
+        }, 1000);
+      }
+      
+      // ========== SCHEDULE MAIN REDIRECT AFTER EXACT 5 SECONDS ==========
+      function scheduleRedirectAfterDelay() {
+        mainTimeout = setTimeout(() => {
+          if (!isRedirecting) {
+            redirectToIndex();
+          }
+        }, SPLASH_DURATION_MS);
+      }
+      
+      // ========== VIDEO EVENT HANDLERS ==========
+      function setupVideoEvents() {
+        if (!splashVideo) return;
+        
+        // If video ends before 5 seconds: we still respect the full 5-second splash duration.
+        // However we DO NOT redirect early. The main timer handles exact 5 seconds.
+        // This ensures that even if the video is shorter, the splash screen stays for exactly 5 seconds.
+        splashVideo.addEventListener('ended', () => {
+          // Optional: just keep last frame visible, timer continues.
+          // Could show subtle info, but no action needed.
+          // The countdown and main timeout will redirect at 5s mark.
+        });
+        
+        // If video cannot load (missing file / network error) -> still redirect after 5 seconds.
+        splashVideo.addEventListener('error', (err) => {
+          console.warn('Video failed to load. Splash will still redirect after 5 seconds.');
+          // The timer ensures redirect anyway; we also keep countdown active.
+          // Optionally update loading hint to indicate fallback, but not needed.
+          const hint = document.getElementById('loadingHint');
+          if (hint) {
+            hint.textContent = 'loading... redirect soon';
+            setTimeout(() => {
+              if (hint && !isRedirecting) hint.style.opacity = '0.5';
+            }, 1500);
+          }
+        });
+        
+        // For browsers that block autoplay even with muted & playsinline, we try .play() and catch.
+        splashVideo.play().catch(e => {
+          console.log('Autoplay prevented or error:', e);
+          // Even if video doesn't play, we still show countdown and redirect after 5 secs.
+          // The user sees black screen with timer, which is acceptable fallback.
+          // We can also add an extra hint
+          const hint = document.getElementById('loadingHint');
+          if (hint) {
+            hint.textContent = 'click SKIP to continue';
+            setTimeout(() => {
+              if (hint && !isRedirecting) hint.style.opacity = '0.7';
+            }, 1000);
+          }
+        });
+      }
+      
+      // ========== SKIP BUTTON FUNCTIONALITY ==========
+      function setupSkipButton() {
+        if (skipBtn) {
+          skipBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            // immediate redirect, no waiting for timer or video end
+            if (!isRedirecting) {
+              redirectToIndex();
+            }
+          });
+        }
+      }
+      
+      // ========== ADDITIONAL GUARD: PREVENT STUCK STATE ==========
+      // If for some strange reason the page never redirects (e.g., mainTimeout blocked), 
+      // but we also have the countdown. Both ensure redirect.
+      // Also we implement a "safety redirect" after 5.5 seconds as ultimate fallback
+      function setupUltimateFallback() {
+        setTimeout(() => {
+          if (!isRedirecting) {
+            console.warn('Ultimate fallback redirect triggered');
+            redirectToIndex();
+          }
+        }, SPLASH_DURATION_MS + 300); // 5.3 sec just in case
+      }
+      
+      // ========== PRELOAD VIDEO FOR SMOOTH PLAYBACK ==========
+      function optimizeVideoLoading() {
+        if (splashVideo) {
+          splashVideo.preload = 'auto';
+          // optional: set video volume to 0 (ensured muted anyway)
+          splashVideo.volume = 0;
+        }
+      }
+      
+      // ========== HANDLE PAGE VISIBILITY (optional, good practice) ==========
+      // If user switches tabs, timer continues working correctly.
+      // No special handling needed because setTimeout works in background.
+      
+      // ========== INITIALIZE SPLASH SYSTEM ==========
+      function init() {
+        optimizeVideoLoading();
+        setupVideoEvents();
+        setupSkipButton();
+        startCountdownTimer();
+        scheduleRedirectAfterDelay();
+        setupUltimateFallback();  // extra safety net
+        
+        // Clear resources on page unload to avoid memory leaks (good practice)
+        window.addEventListener('beforeunload', () => {
+          if (mainTimeout) clearTimeout(mainTimeout);
+          if (countdownInterval) clearInterval(countdownInterval);
+        });
+      }
+      
+      // Start everything once DOM is fully ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+      } else {
+        init();
+      }
+    })();
+  </script>
+  
+  <!-- 
+    ========== INSTRUCTIONS ==========
+    1. REPLACE THE VIDEO FILE:
+       - Find the <video> tag inside .video-wrapper.
+       - Change 'your-reel-video.mp4' to the actual path of your 5-second reel.
+         Example: src="assets/intro.mp4" or "https://mysite.com/videos/splash.mp4"
+       - Supported formats: MP4, WebM, MOV (browser-compatible).
+    
+    2. ENSURE VIDEO ATTRIBUTES:
+       - Keep muted, playsinline, autoplay – these are required for auto-play policies.
+       - The video should be ideally 5 seconds or shorter/longer — the splash screen ALWAYS lasts 5 seconds total.
+         (If video is shorter, last frame stays; if longer, splash cuts at 5s mark.)
+    
+    3. REDIRECT BEHAVIOR:
+       - After 5 seconds, the page automatically redirects to 'index.html'.
+       - The "SKIP" button lets users bypass the splash and redirect immediately.
+       - Countdown timer shows remaining seconds.
+    
+    4. CUSTOMIZATION:
+       - To change redirect target, edit the variable 'REDIRECT_URL' in the script (line ~84).
+       - Adjust splash duration by changing 'SPLASH_DURATION_MS' (default 5000).
+       - Modify colors or styling in the <style> section.
+    
+    5. TROUBLESHOOTING:
+       - If video doesn't play, ensure the file path is correct and the video is served with correct MIME type.
+       - Most modern browsers require user interaction for unmuted videos — but we use muted, so autoplay works.
+       - Fallback: Even if video fails, splash will still redirect after 5 seconds.
+    
+    6. FILE STRUCTURE:
+       - Place this HTML file in the same directory as your 'index.html' (or adjust REDIRECT_URL accordingly).
+       - For example: / (root) 
+            - splash.html (this file)
+            - index.html (your main website)
+            - your-reel-video.mp4 (video file)
+    
+    --- ENJOY YOUR PROFESSIONAL SPLASH SCREEN WITH REDIRECT! ---
+  -->
+</body>
+</html>
