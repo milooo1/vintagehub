@@ -386,42 +386,5 @@
     })();
   </script>
   
-  <!-- 
-    ========== INSTRUCTIONS ==========
-    1. REPLACE THE VIDEO FILE:
-       - Find the <video> tag inside .video-wrapper.
-       - Change 'your-reel-video.mp4' to the actual path of your 5-second reel.
-         Example: src="assets/intro.mp4" or "https://mysite.com/videos/splash.mp4"
-       - Supported formats: MP4, WebM, MOV (browser-compatible).
-    
-    2. ENSURE VIDEO ATTRIBUTES:
-       - Keep muted, playsinline, autoplay – these are required for auto-play policies.
-       - The video should be ideally 5 seconds or shorter/longer — the splash screen ALWAYS lasts 5 seconds total.
-         (If video is shorter, last frame stays; if longer, splash cuts at 5s mark.)
-    
-    3. REDIRECT BEHAVIOR:
-       - After 5 seconds, the page automatically redirects to 'index.html'.
-       - The "SKIP" button lets users bypass the splash and redirect immediately.
-       - Countdown timer shows remaining seconds.
-    
-    4. CUSTOMIZATION:
-       - To change redirect target, edit the variable 'REDIRECT_URL' in the script (line ~84).
-       - Adjust splash duration by changing 'SPLASH_DURATION_MS' (default 5000).
-       - Modify colors or styling in the <style> section.
-    
-    5. TROUBLESHOOTING:
-       - If video doesn't play, ensure the file path is correct and the video is served with correct MIME type.
-       - Most modern browsers require user interaction for unmuted videos — but we use muted, so autoplay works.
-       - Fallback: Even if video fails, splash will still redirect after 5 seconds.
-    
-    6. FILE STRUCTURE:
-       - Place this HTML file in the same directory as your 'index.html' (or adjust REDIRECT_URL accordingly).
-       - For example: / (root) 
-            - splash.html (this file)
-            - index.html (your main website)
-            - your-reel-video.mp4 (video file)
-    
-    --- ENJOY YOUR PROFESSIONAL SPLASH SCREEN WITH REDIRECT! ---
-  -->
 </body>
 </html>
