@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Admin — VintageHub</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: system-ui, sans-serif; background: #0f0f1a; color: #eee; margin: 0; padding: 24px; }
+    .wrap { max-width: 760px; margin: 0 auto; }
+    h1 { margin: 0 0 4px; } h2 { margin: 32px 0 12px; }
+    .card { background: #1a1a2e; border-radius: 16px; padding: 24px; margin-bottom: 20px; }
+    label { display: block; font-size: 13px; margin: 14px 0 6px; color: #aaa; }
+    input, select, textarea { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #333; background: #12121f; color: #fff; font: inherit; }
+    textarea { min-height: 90px; resize: vertical; }
+    .row { display: flex; gap: 12px; } .row > * { flex: 1; }
+    button { cursor: pointer; border: 0; border-radius: 10px; padding: 12px 20px; font: inherit; font-weight: 600; }
+    button:disabled { opacity: .6; cursor: not-allowed; }
+    .primary { background: #4ecdc4; color: #0f0f1a; margin-top: 20px; width: 100%; }
+    .danger { background: #ff6b6b; color: #fff; padding: 8px 14px; }
+    .ghost { background: #2a2a40; color: #fff; }
+    .hidden { display: none; }
+    .msg { margin-top: 12px; font-size: 14px; } .err { color: #ff6b6b; } .ok { color: #4ecdc4; }
+    .item { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 0; border-bottom: 1px solid #2a2a40; }
+    .item:last-child { border: 0; }
+    .item small { color: #999; display: block; margin-top: 4px; }
+    .tag { font-size: 11px; padding: 2px 8px; border-radius: 10px; margin-left: 8px; }
+    .tag.active { background: #1f6f68; } .tag.expired { background: #6b2a2a; }
+    .top { display: flex; justify-content: space-between; align-items: center; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- LOGIN -->
+  <div id="loginView" class="card hidden">
+    <h1>Admin Login</h1>
+    <label>Email</label><input id="email" type="email" autocomplete="username" />
+    <label>Password</label><input id="password" type="password" autocomplete="current-password" />
+    <button class="primary" id="loginBtn">Log in</button>
+    <div id="loginMsg" class="msg err"></div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="adminView" class="hidden">
+    <div class="top">
+      <div><h1>Announcements</h1><small id="who" style="color:#999"></small></div>
+      <button class="ghost" id="logoutBtn">Log out</button>
+    </div>
+
+    <h2>New announcement</h2>
+    <div class="card">
+      <label>Title *</label><input id="title" maxlength="100" />
+      <label>Text *</label><textarea id="text"></textarea>
+      <div class="row">
+        <div>
+          <label>Type</label>
+          <select id="badge">
+            <option value="event">Event</option>
+            <option value="offer">Offer</option>
+            <option value="update">Update</option>
+          </select>
+        </div>
+        <div>
+          <label>Expires after *</label>
+          <select id="duration">
+            <option value="1">1 hour</option>
+            <option value="6">6 hours</option>
+            <option value="24">24 hours</option>
+            <option value="72">3 days</option>
+            <option value="168" selected>7 days</option>
+            <option value="336">14 days</option>
+            <option value="720">30 days</option>
+            <option value="custom">Custom date &amp; time…</option>
+          </select>
+        </div>
+      </div>
+      <div id="customWrap" class="hidden">
+        <label>Expires at</label><input id="customDate" type="datetime-local" />
+      </div>
+      <label>Image path or URL (optional)</label>
+      <input id="image" placeholder="images/avegaya.jpeg or https://..." />
+      <label>Links (optional): one per line as <code>Text | https://url</code></label>
+      <textarea id="links" placeholder="Buy tickets | https://tickets.example.com"></textarea>
+      <button class="primary" id="publishBtn">Publish</button>
+      <div id="formMsg" class="msg"></div>
+    </div>
+
+    <h2>All announcements</h2>
+    <div class="card" id="list"></div>
+  </div>
+</div>
+
+<script type="module">
+  import { db, auth } from "./js/firebase-config.js";
+  import { signInWithEmailAndPassword, signOut, onAuthStateChanged }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { collection, addDoc, deleteDoc, doc, query, orderBy, onSnapshot, Timestamp, serverTimestamp }
+    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const $ = id => document.getElementById(id);
+  let unsub = null, tick = null, docs = [];
+
+  // ---------- Auth ----------
+  onAuthStateChanged(auth, user => {
+    $("loginView").classList.toggle("hidden", !!user);
+    $("adminView").classList.toggle("hidden", !user);
+    if (user) { $("who").textContent = user.email; startList(); }
+    else { if (unsub) unsub(); unsub = null; clearInterval(tick); tick = null; }
+  });
+
+  $("loginBtn").onclick = async () => {
+    $("loginMsg").textContent = "";
+    try { await signInWithEmailAndPassword(auth, $("email").value.trim(), $("password").value); }
+    catch { $("loginMsg").textContent = "Wrong email or password."; }
+  };
+  $("password").addEventListener("keydown", e => { if (e.key === "Enter") $("loginBtn").click(); });
+  $("logoutBtn").onclick = () => signOut(auth);
+
+  // ---------- Form ----------
+  $("duration").onchange = () => $("customWrap").classList.toggle("hidden", $("duration").value !== "custom");
+
+  function parseLinks(raw) {
+    return raw.split("\n").map(l => l.trim()).filter(Boolean).map(l => {
+      const [text, ...rest] = l.split("|");
+      return { text: text.trim(), url: rest.join("|").trim() };
+    }).filter(l => l.text && /^https?:\/\//i.test(l.url));
+  }
+
+  function msg(text, ok) {
+    const m = $("formMsg");
+    m.textContent = text; m.className = "msg " + (ok ? "ok" : "err");
+  }
+
+  $("publishBtn").onclick = async () => {
+    const title = $("title").value.trim();
+    const text = $("text").value.trim();
+    if (!title || !text) return msg("Title and text are required.");
+
+    let expiresMs;
+    if ($("duration").value === "custom") {
+      if (!$("customDate").value) return msg("Pick an expiry date & time.");
+      expiresMs = new Date($("customDate").value).getTime();
+    } else {
+      expiresMs = Date.now() + Number($("duration").value) * 3600 * 1000;
+    }
+    if (expiresMs <= Date.now()) return msg("Expiry must be in the future.");
+
+    $("publishBtn").disabled = true;
+    try {
+      await addDoc(collection(db, "announcements"), {
+        title, text,
+        badge: $("badge").value,
+        image: $("image").value.trim() || null,
+        links: parseLinks($("links").value),
+        createdAt: serverTimestamp(),
+        expiresAt: Timestamp.fromMillis(expiresMs)
+      });
+      msg("Published ✓", true);
+      ["title", "text", "image", "links", "customDate"].forEach(id => $(id).value = "");
+    } catch (e) {
+      console.error(e);
+      msg("Could not publish. Check your Firestore rules / admin UID.");
+    }
+    $("publishBtn").disabled = false;
+  };
+
+  // ---------- List ----------
+  function startList() {
+    if (unsub) return;
+    unsub = onSnapshot(query(collection(db, "announcements"), orderBy("createdAt", "desc")), snap => {
+      docs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderList();
+    });
+    tick = setInterval(renderList, 1000);
+  }
+
+  function fmt(ms) {
+    const s = Math.floor(ms / 1000);
+    const d = Math.floor(s / 86400), h = Math.floor(s % 86400 / 3600), m = Math.floor(s % 3600 / 60), sec = s % 60;
+    return d > 0 ? `${d}d ${h}h ${m}m` : h > 0 ? `${h}h ${m}m ${sec}s` : `${m}m ${sec}s`;
+  }
+
+  function renderList() {
+    const list = $("list");
+    if (!docs.length) { list.textContent = "Nothing yet."; return; }
+    list.innerHTML = "";
+    docs.forEach(a => {
+      if (!a.expiresAt) return;
+      const left = a.expiresAt.toMillis() - Date.now();
+      const row = document.createElement("div"); row.className = "item";
+      const info = document.createElement("div");
+      const t = document.createElement("strong"); t.textContent = a.title;
+      const tag = document.createElement("span");
+      tag.className = "tag " + (left > 0 ? "active" : "expired");
+      tag.textContent = left > 0 ? "Active" : "Expired";
+      const sm = document.createElement("small");
+      sm.textContent = left > 0 ? `Ends in ${fmt(left)}` : `Expired ${a.expiresAt.toDate().toLocaleString()}`;
+      info.append(t, tag, sm);
+      const del = document.createElement("button"); del.className = "danger"; del.textContent = "Delete";
+      del.onclick = async () => {
+        if (confirm(`Delete "${a.title}"?`)) await deleteDoc(doc(db, "announcements", a.id));
+      };
+      row.append(info, del);
+      list.appendChild(row);
+    });
+  }
+</script>
+</body>
+</html>
